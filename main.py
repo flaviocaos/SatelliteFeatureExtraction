@@ -1,52 +1,72 @@
-import os
+# Vamos gerar o arquivo .py com o conteúdo do código fornecido.
+code_content = """
 import numpy as np
-import matplotlib.pyplot as plt
-import rasterio
-from rasterio.transform import from_origin
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from src.preprocessing import load_image, normalize_image, calculate_ndvi
+
+from src.preprocessing import load_image, normalize_image, calculate_ndvi, load_labels
+from src.model import train_model, classify_image
 from src.export import export_raster
+from src.visualization import plot_classification
 
 def main():
     image_path = "data/sentinel2_example.tif"
+    label_path = "data/labels.tif"
+    output_raster = "outputs/rasters/resultado_classificacao.tif"
+    output_figure = "outputs/figures/mapa_classificado.pdf"
 
-    print("Lendo e pré-processando a imagem...")
+    print("🚀 Lendo imagem...")
     image, profile = load_image(image_path)
     image_normalized = normalize_image(image)
 
-    # Verifica se há bandas suficientes para NDVI (mínimo: NIR e Red)
+    print("🧠 Calculando NDVI...")
     if image.shape[0] >= 5:
         ndvi = calculate_ndvi(image_normalized[4], image_normalized[3])
+        image_with_ndvi = np.vstack([image_normalized, ndvi[None, ...]])
     else:
-        ndvi = None
-        print("NDVI não pôde ser calculado: número insuficiente de bandas.")
+        print("⚠️ NDVI não pôde ser calculado. Prosseguindo sem ele.")
+        image_with_ndvi = image_normalized
 
-    print("Preparando dados para treinamento...")
-    features = image_normalized.reshape(-1, image_normalized.shape[0])
-    labels = np.random.randint(0, 2, size=(features.shape[0],))  # Substituir por rótulos reais
-    X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.3, random_state=42)
+    print("🏷️ Lendo rótulos...")
+    labels, _ = load_labels(label_path)
+    labels_flat = labels.flatten()
+    mask = labels_flat != 0
 
-    print("Treinando modelo Random Forest...")
-    rf = RandomForestClassifier(n_estimators=100, random_state=42)
-    rf.fit(X_train, y_train)
-    y_pred = rf.predict(X_test)
-    print("Acurácia Random Forest:", accuracy_score(y_test, y_pred))
+    features = image_with_ndvi.reshape(image_with_ndvi.shape[0], -1).T
+    features = features[mask]
+    labels_flat = labels_flat[mask]
 
-    print("Classificando toda a imagem...")
-    classified = rf.predict(features).reshape(image.shape[1], image.shape[2])
+    print("📊 Separando treino e teste...")
+    X_train, X_test, y_train, y_test = train_test_split(
+        features, labels_flat, test_size=0.3, random_state=42
+    )
 
-    print("Exportando resultado...")
-    export_raster("outputs/resultado_classificacao.tif", classified, profile)
+    print("🎯 Treinando modelo...")
+    model = train_model(X_train, y_train)
 
-    print("Visualizando resultado...")
-    plt.figure(figsize=(10, 6))
-    plt.imshow(classified, cmap='jet')
-    plt.title('Mapa Classificado')
-    plt.colorbar()
-    plt.savefig("outputs/mapa_classificado.pdf", dpi=300)
-    plt.show()
+    y_pred = model.predict(X_test)
+    print(f"✅ Acurácia: {accuracy_score(y_test, y_pred) * 100:.2f}%")
+
+    print("🗺️ Classificando imagem completa...")
+    classified = classify_image(model, image_with_ndvi)
+
+    print("💾 Exportando raster...")
+    export_raster(output_raster, classified, profile)
+
+    print("🎨 Gerando mapa...")
+    plot_classification(classified, output_figure)
+
+    print("🏁 Pipeline finalizado com sucesso!")
+
+if __name__ == "__main__":
+    main()
+"""
+
+file_path = '/mnt/data/main.py'
+with open(file_path, 'w') as file:
+    file.write(code_content)
+
+file_path
 
 if __name__ == "__main__":
     main()
