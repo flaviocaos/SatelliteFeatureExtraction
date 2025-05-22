@@ -1,68 +1,87 @@
-# Extração de Feições em Imagens de Satélite com Machine Learning
+# 🛰️ LandCover Classification
 
-Este projeto tem como objetivo desenvolver um pipeline em Python para extrair feições de imagens de satélite de baixa, média e alta resolução espacial utilizando algoritmos de aprendizado de máquina como Random Forest e redes neurais convolucionais (CNNs).
+Este projeto realiza a **classificação de uso e cobertura da terra** com base em imagens multiespectrais do Sentinel-2, utilizando processamento com Python e aprendizado de máquina com Random Forest.
 
-## 📂 Estrutura do Projeto
+---
+
+## 📁 Estrutura do Projeto
 
 ```
-satellite-feature-extraction/
-├── data/                    # Imagens de entrada (GeoTIFF)
-├── outputs/                 # Resultados exportados (GeoTIFF, PDF)
-├── src/                     # Código fonte
-│   ├── preprocessing.py     # Leitura e normalização de imagens, NDVI
-│   └── export.py            # Função para exportar o raster classificado
-├── main.py                  # Script principal
-├── requirements.txt         # Bibliotecas necessárias
-└── README.md
+Lancover_classification/
+├── data/                       # Dados de entrada (.tif)
+├── outputs/                    # Resultados (raster e figuras)
+├── src/                        # Módulos Python (preprocessamento, modelo, exportação, visualização)
+├── LandCover_Classification.ipynb   # ✅ Notebook interativo
+├── main.py                     # Pipeline automatizado via script
+├── requirements.txt             # Dependências
+├── .gitignore                   # Arquivos ignorados no Git
+└── README.md                    # Documentação
 ```
 
-## ⚙️ Requisitos
+---
 
-- Python 3.9+
-- Bibliotecas:
-  - numpy
-  - matplotlib
-  - scikit-learn
-  - rasterio
-  - tensorflow
+## ▶️ Como executar o pipeline (script)
 
-Instale com:
+1. Garanta que todas as dependências estejam instaladas:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 🚀 Como Executar
-
-1. Coloque a imagem de satélite desejada em `data/` (ex: Sentinel-2, MODIS, WorldView).
-2. Edite o caminho da imagem no arquivo `main.py`:
-
-```python
-image_path = "data/sentinel2_example.tif"
-```
-
-3. Execute o script principal:
+2. Execute o pipeline:
 
 ```bash
 python main.py
 ```
 
-4. O resultado será salvo em:
-- GeoTIFF: `outputs/resultado_classificacao.tif`
-- Mapa em PDF: `outputs/mapa_classificado.pdf`
+---
 
-## 📌 Observações
+## 📓 Como usar o notebook
 
-- O projeto está preparado para lidar com diferentes resoluções espaciais (baixa, média e alta).
-- Atualmente os rótulos são gerados aleatoriamente para fins de teste.
-- Para uso real, recomenda-se substituir por dados de treinamento reais (shapefiles, máscaras raster ou amostras manuais).
-
-## 📈 Extensões Futuras
-- Integração com shapefiles para rótulos supervisionados
-- Suporte a CNNs com extração de patches
-- Automatização de recorte, reprojeção e amostragem
+1. Abra o `LandCover_Classification.ipynb` no **Jupyter Notebook**, **Jupyter Lab**, **VS Code (com extensão Jupyter)** ou **Google Colab**.
+2. Execute célula por célula para visualizar todo o processo, desde a leitura das imagens até a geração dos mapas classificados.
 
 ---
 
-Desenvolvido como parte de um TCC sobre Machine Learning e Sensoriamento Remoto 🌍📡
+## 🧠 Funcionalidades
 
+- Carregamento de imagens satélite Sentinel-2.
+- Cálculo do NDVI.
+- Pré-processamento de dados raster.
+- Treinamento de modelo Random Forest.
+- Classificação supervisionada da imagem.
+- Exportação dos resultados em raster e em figuras.
+- Visualização dos mapas classificados.
+
+---
+
+## 🧪 Tecnologias utilizadas
+
+- Python 3
+- NumPy
+- Scikit-learn
+- Matplotlib
+- Rasterio
+- Jupyter Notebook
+
+---
+
+## 🚀 Melhorias futuras
+
+- Integração com outros índices espectrais (NDWI, NDBI).
+- Interface gráfica para uso não programático.
+- Integração com plataformas em nuvem (Google Earth Engine, AWS).
+- Aumento na diversidade de datasets.
+
+---
+
+## 📝 Licença
+
+Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+
+## 👨‍💻 Autor
+
+**Flavio Caos**  
+🔗 [https://github.com/flaviocaos](https://github.com/flaviocaos)
