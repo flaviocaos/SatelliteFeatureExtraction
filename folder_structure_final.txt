@@ -1,0 +1,18 @@
+landcover-classification/
+├── data/                    # Dados de entrada
+│   ├── sentinel2_example.tif
+│   └── labels.tif
+├── outputs/                 # Resultados
+│   ├── rasters/
+│   └── figures/
+├── src/                     # Código modular
+│   ├── __init__.py
+│   ├── preprocessing.py
+│   ├── model.py
+│   ├── export.py
+│   └── visualization.py
+├── main.py                  # Pipeline executável
+├── LandCover_Classification.ipynb  # 🧠 Jupyter Notebook
+├── requirements.txt         # Dependências
+├── README.md                # Documentação
+└── .gitignore               # Arquivos ignorados pelo git
