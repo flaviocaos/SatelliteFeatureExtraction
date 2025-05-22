@@ -1,5 +1,8 @@
-numpy
-matplotlib
-scikit-learn
-rasterio
-tensorflow
+numpy>=1.21.0
+matplotlib>=3.4.0
+scikit-learn>=1.0.0
+rasterio>=1.2.10
+jupyterlab>=3.0.0
+notebook>=6.4.0
+pillow>=9.0.0
+fpdf>=1.7.2
