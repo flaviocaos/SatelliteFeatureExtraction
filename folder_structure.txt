@@ -1,0 +1,15 @@
+project/
+├── data/
+│   ├── sentinel2_example.tif
+│   └── labels.tif
+├── outputs/
+│   ├── rasters/
+│   └── figures/
+├── src/
+│   ├── preprocessing.py
+│   ├── export.py
+│   ├── model.py
+│   └── visualization.py
+├── main.py
+├── requirements.txt
+└── README.md
