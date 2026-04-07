@@ -1,83 +1,107 @@
 # 🛰️ Satellite Feature Extraction
 
-Projeto de classificação de uso e cobertura da terra utilizando imagens Sentinel-2 e aprendizado de máquina (Random Forest).
+Classificação de **Uso e Cobertura da Terra** com imagens **Sentinel-2** e **Random Forest**.  
+Projeto de TCC com interface web local construída em Streamlit.
+
+**Autor:** Flávio Caos · [github.com/flaviocaos](https://github.com/flaviocaos)
+
+---
 
 ## 📁 Estrutura do Projeto
 
-Lancover_classification/
-  data/                  - Dados de entrada (imagens e labels)
-  outputs/               - Saídas (rasters e figuras)
-    rasters/             - Arquivos raster classificados
-    figures/             - Mapas e gráficos exportados
-  src/                   - Scripts e módulos Python
-    preprocessing.py     - Processamento e normalização de imagens
-    model.py             - Modelagem e classificação
-    export.py            - Exportação de arquivos
-    visualization.py     - Geração de mapas e gráficos
-  LandCover_Classification.ipynb - Notebook principal do projeto
-  main.py                - Pipeline completo via script
-  .gitignore             - Arquivos ignorados pelo Git
-  git_auto_commit.bat    - Script de automação de commits
-  checklist_git.pdf      - Checklist dos comandos Git
-  README.md              - Documentação do projeto
-  requirements.txt       - Dependências necessárias para execução
+```
+SatelliteFeatureExtraction/
+├── app.py                  # Ponto de entrada — streamlit run app.py
+├── requirements.txt
+├── README.md
+├── data/                   # Imagens de entrada (não versionado)
+├── outputs/
+│   ├── rasters/            # Rasters classificados exportados
+│   └── figures/            # Figuras e mapas exportados
+├── core/
+│   ├── __init__.py
+│   ├── preprocessing.py    # load_image, normalize, NDVI, load_labels
+│   ├── model.py            # train_model, classify_image, feature_importance
+│   ├── export.py           # export_raster, export_figure
+│   └── visualization.py    # plot_classification, plot_band, plot_ndvi, etc.
+├── utils/
+│   ├── __init__.py
+│   └── helpers.py          # validate_shapes, get_band_stats, format_metrics
+├── assets/                 # Logos e recursos estáticos
+└── LandCover_Classification.ipynb
+```
+
+---
 
 ## 🚀 Como Executar
 
-### ✔️ Executar pelo pipeline (main.py)
+### 1. Criar ambiente virtual
 
-1. Instale as dependências:
+```bash
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# macOS / Linux
+source .venv/bin/activate
+```
 
+### 2. Instalar dependências
+
+```bash
 pip install -r requirements.txt
+```
 
-2. Execute o pipeline:
+### 3. Rodar o app
 
-python main.py
+```bash
+streamlit run app.py
+```
 
-### ✔️ Executar pelo notebook
+O app abrirá automaticamente em `http://localhost:8501`.
 
-1. Abra o arquivo LandCover_Classification.ipynb no Jupyter Notebook, Jupyter Lab ou VS Code.
-2. Execute célula por célula.
+---
 
-## 🧠 Funcionalidades
+## 🧠 Pipeline do App
 
-- ✅ Carregamento de imagens Sentinel-2.
-- ✅ Cálculo do NDVI.
-- ✅ Pré-processamento das bandas espectrais.
-- ✅ Treinamento de modelo Random Forest.
-- ✅ Classificação supervisionada da imagem.
-- ✅ Exportação dos resultados (raster e gráficos).
-- ✅ Geração de mapas classificados.
+| Etapa | Descrição |
+|---|---|
+| **1. Upload** | Imagem Sentinel-2 multibanda + raster de labels |
+| **2. Exploração** | Estatísticas por banda, visualização e análise de classes |
+| **3. Pré-processamento** | Seleção de bandas, normalização min-max, cálculo de NDVI |
+| **4. Treinamento** | Random Forest com OOB score, cross-validation e importância de features |
+| **5. Classificação** | Predição pixel a pixel com o modelo treinado |
+| **6. Exportação** | Raster GeoTIFF comprimido (LZW) + figuras PNG |
 
-## 🔧 Dependências
+---
 
-- numpy
-- matplotlib
-- scikit-learn
-- rasterio
+## ⚙️ Parâmetros Configuráveis (Sidebar)
 
-Instale todas com:
+- Índices das bandas NIR e Red para o NDVI
+- `n_estimators`, `max_depth`, `random_state`
+- Número de folds para cross-validation
+- Ativar/desativar NDVI como feature
 
-pip install -r requirements.txt
+---
 
-## 📄 Licença
+## 📦 Dependências Principais
 
-Este projeto está licenciado sob a licença MIT. Consulte o arquivo LICENSE para mais informações.
+| Biblioteca | Uso |
+|---|---|
+| `streamlit` | Interface web |
+| `rasterio` | I/O de rasters GeoTIFF |
+| `scikit-learn` | Random Forest e métricas |
+| `numpy` | Manipulação de arrays |
+| `matplotlib` | Visualizações e mapas |
+| `pandas` | Tabelas de estatísticas |
 
-## 🙌 Autor
+---
 
-**Flávio Caos**  
-🔗 https://github.com/flaviocaos
+## 🔮 Melhorias Futuras
 
-## 🌟 Checklist Git incluído
-
-- Arquivo checklist_git.pdf disponível no projeto.
-- Script git_auto_commit.bat para automação de commits e pushes no Windows.
-
-## 🚀 Fluxo Git Recomendo
-
-- Branch main → produção
-- Branch develop → desenvolvimento
-- Branches feature/* → novas funcionalidades
-- Branch hotfix/* → correções rápidas
-- Branch release/* → preparação de releases
+- [ ] Suporte a CNNs (U-Net, ResNet) para segmentação semântica
+- [ ] Múltiplos classificadores (SVM, XGBoost, KNN) com comparação
+- [ ] Geração automática de relatório PDF com resultados
+- [ ] Suporte a mosaicos grandes com processamento em tiles
+- [ ] Exibição de métricas por classe (F1-score, recall, precision)
+- [ ] Integração com Google Earth Engine para download de imagens
+- [ ] Versão Docker para deploy simplificado
